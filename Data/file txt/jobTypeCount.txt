@@ -1,0 +1,5 @@
+job_type,total_jobs
+monday - friday,962
+fulltime,274
+monday - saturday,53
+part-time,1

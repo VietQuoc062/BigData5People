@@ -1,0 +1,9 @@
+Khu Vực,Số lượng tin tuyển,Lương trung bình
+TP. Hồ Chí Minh,208,42.6 triệu VND
+Hà Nội,158,41.6 triệu VND
+Đà Nẵng,9,52.1 triệu VND
+Huế,2,54.6 triệu VND
+Other,2,36.0 triệu VND
+Hà Nội - Hồ Chí Minh,1,78.0 triệu VND
+Lâm Đồng,1,11.1 triệu VND
+Bình dương,1,19.5 triệu VND

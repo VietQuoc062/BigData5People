@@ -1,0 +1,466 @@
+Column1;Column2
+.NET;65
+.NET Core;2
+.Net Core;13
+3D Max;1
+3D Modelling;1
+3ds Max;1
+A/B testing;1
+ABAP;1
+AI;104
+API;76
+ARM Cortex;1
+ASP.NET;14
+AUTOSAR;1
+AWS;106
+AWS CloudFormation;2
+AWS Lambda;2
+Adobe;2
+Adobe Photoshop;4
+Adobe XD;3
+Agile;122
+Agile & Scrum;4
+Agora;1
+Algorithms;1
+Android;46
+Android studio;4
+Angular;31
+AngularJS;2
+Animation 3D;1
+Ansible;1
+Anti-malware;1
+Antivirus;1
+Apache Airflow;1
+Apache HttpClient;1
+Apache Spark;3
+Apex;1
+Appium;4
+Application Security;2
+AutoCAD;1
+Automation QA;1
+Automation Test;56
+Automation Tester;7
+Azure;49
+BPMN;3
+BRD;1
+Back-End;8
+Bash Shell;2
+Big Data;22
+BigCommerce;4
+Black box testing;4
+Blockchain;13
+Boost;1
+Bootstrap;1
+BrSE;3
+Bridge Engineer;11
+Bridge SE;2
+BrowserStack;1
+Business Analysis;65
+Business Analyst;18
+Business Intelligence;5
+C Language;1
+C language;17
+C#;73
+C++;48
+C/C++;7
+CCNA;3
+CI/CD;58
+CRM;6
+CSS;46
+CSS 3;12
+CakePHP;1
+Cassandra;1
+Cisco;4
+Clean Architecture;1
+Cloud;77
+Cloud Security;6
+Cloud-native Architecture;3
+CloudFormation;3
+Cocoa Touch;1
+Cocos;2
+Cocos Creator;1
+CodeIgniter;1
+Computer Vision;8
+Container Security;1
+Creative Direction;1
+Cryptocurrency;1
+Cryptography;2
+Cucumber;4
+Cybersecurity;19
+Cypress;2
+D3.js;1
+DBA;2
+DBT;1
+DNS Security;1
+Dart;7
+Data Administrator;1
+Data Analysis;26
+Data Analyst;1
+Data Analytics;9
+Data Architecture;1
+Data Engineer;22
+Data Quality Tools;1
+Data Science;21
+Data Visualization;4
+Data Warehouse;1
+Data Warehousing;11
+Data modeling;2
+Data-driven;3
+Database;77
+Database Administrator;1
+Databricks;9
+Decorator pattern;1
+Deep Learning;10
+Design;20
+Design Patterns;2
+Design Systems;5
+DevOps;89
+DevSecOps;12
+Django;16
+Docker;40
+Domain-Driven Design;3
+DynamoDB;1
+EDR;2
+ELK Stack;1
+ELT;5
+ERP;19
+ETL;19
+Elasticsearch;3
+Electron;1
+Embedded;12
+Embedded Android;1
+Embedded C;3
+Embedded Engineer;2
+Embedded System;1
+Encryption & Key Management;1
+Encryption Key Management;1
+English;284
+Enterprise Architecture;3
+Entity Framework;3
+Entity Framework Core;2
+Express;1
+ExpressJS;6
+FastAPI;5
+Figma;24
+Firebase;2
+Firewall;4
+Firmware;3
+Flask;3
+Flutter;28
+Front-End;5
+Full-Stack;5
+Fullstack;28
+Functional specifications;1
+GCP;8
+Game;4
+Game Artist;1
+Game Design;2
+Game Developer;1
+Game Mobile;1
+Games;23
+Generative AI;9
+Gin;4
+Git;38
+GitHub;2
+GitLab;3
+GitLab CI;2
+Golang;68
+Google Cloud;6
+Google Cloud SQL;1
+Governance;2
+Grafana;3
+Grails;1
+GraphQL;5
+Graphic Design;1
+HIPAA / GDPR;1
+HRM / HCM;3
+HTML;38
+HTML5;33
+Hadoop;1
+Hardhat;1
+Hardware Troubleshooting;1
+Helm;1
+Hibernate;7
+IDS/IPS;1
+ISO 27001;1
+IT Audit;5
+IT Communication/Translation;4
+IT Comtor;1
+IT Consultant;2
+IT Helpdesk;3
+IT Operations;1
+IT Security;14
+IT Support;17
+IT System;2
+ITIL Foundation;2
+Identity & Access Management;2
+Illustrator;6
+Image Recognition;1
+Incident Response;2
+InfluxDB;2
+Information Security;7
+Infrastructure;1
+Integration test;4
+IoT;7
+IoT Platforms;3
+Ionic;1
+J2EE;9
+JQuery;5
+JSON;10
+JUnit;2
+Japanese;29
+Japanese - N2;2
+Japanese IT Communication;7
+Java;235
+Java EE;3
+Java Swing;1
+JavaScript;177
+Jenkins;4
+Jest;3
+Jira;31
+Jmeter;3
+Kafka;9
+Katalon;2
+Keras;1
+KonvaJS;1
+Korean;7
+Kotlin;31
+Kubernetes;22
+LINQ;5
+LLM;19
+Laravel;23
+Leadership;40
+Lean Project Management;2
+Less;1
+Linux;60
+Live2D;1
+LoadRunner;1
+Lua;1
+MFC;2
+MLOps;5
+MS Office;1
+MS SQL;1
+MVC;13
+MVP;3
+MVVM;9
+Machine Learning;58
+Magento;4
+Manager;1
+Manual Test;3
+Manual Tester;4
+MariaDB;1
+Market research;4
+Marketing;1
+Matlab;1
+Maven;1
+Mercurial;1
+Metasploit;1
+Microservices;46
+Microservices Architecture;4
+Microsoft Azure SQL Database;1
+Microsoft Dynamics 365;5
+Microsoft Power Apps;2
+Microsoft SQL Server;5
+Middleware;1
+Mobile;4
+Mobile Apps;32
+MongoDB;21
+MySQL;55
+NLP;11
+NestJS;26
+Network;16
+Networking;23
+NextJS;38
+Nginx;1
+NoSQL;23
+NodeJS;112
+NumPy;1
+Nuxt.js;6
+OOP;38
+OWASP;2
+Objective C;10
+Objective-C;1
+Odoo;8
+OpenGL;1
+OpenStack;2
+Openstack Development;1
+Oracle;57
+OutSystems;4
+PCI DSS;2
+PHP;51
+PL/SQL;5
+PMP;1
+PQA;2
+Pandas;2
+Penetration Test;2
+Penetration Testing;2
+Pentest;3
+Phoenix;1
+Photoshop;3
+Playwright;12
+PostgreSql;52
+Postman;10
+Power BI;16
+PowerShell;2
+Presale;3
+Product;2
+Product Design;5
+Product Management;23
+Product Manager;1
+Product Metrics;1
+Product Owner;31
+Product canvas;1
+Product roadmap;2
+Product strategy;2
+Project Leader;1
+Project Management;56
+Project Manager;13
+Prometheus;2
+Prompt Engineering;4
+Prototyping;3
+PyTorch;13
+Python;220
+QA;10
+QA QC;71
+QA/QC;1
+QC;1
+Qt;1
+Quarkus;1
+R;6
+REST API;2
+REST Assured;1
+RTOS;2
+RabbitMQ;1
+React;5
+React Native;38
+ReactJS;164
+Redis;10
+Redux;10
+Research;1
+Restful Api;4
+Risk & Compliance;2
+Risk Assessment / BCP;1
+Risk Management;10
+Robot Framework;3
+Ruby;5
+Ruby on Rails;5
+Rust;8
+RxJS;2
+SAP;9
+SAP BusinessObjects;1
+SIEM;3
+SOAP;1
+SOAR;2
+SOLID Principles;7
+SQL;196
+SQL Server;3
+SQLite;1
+Salesforce;5
+Sass;1
+Scala;7
+Scrum;47
+Security;22
+Security Engineer;11
+Selenium;24
+ServiceNow;2
+ServiceNow App Engine;1
+Sharepoint;5
+Shopify;5
+Six sigma;1
+Sketch;5
+Snowflake;1
+SoapUI;1
+Software Architecture;28
+Software Developer;2
+Solidity;2
+Solution Architecture;18
+Spark;3
+Spine;1
+Splunk;2
+Spring;51
+Spring Boot;48
+Sprint planning;1
+Stakeholder management;5
+Statistical Analysis;2
+Strategy planning;1
+Swift;19
+Symfony;2
+Symphony;1
+System;1
+System Admin;22
+System Architecture;14
+System Engineer;3
+System Security;2
+T-SQL;1
+Tableau;4
+Tailwind;5
+Team Management;62
+Technical Architect;1
+Technical Consultant;1
+Technical Leader;6
+Technical Writing;2
+Technology Roadmapping;1
+TensorFlow;12
+Tensorflow;2
+Terraform;6
+Test;3
+TestComplete;1
+TestNG;2
+TestRail;1
+Tester;93
+Trello;2
+Truffle;1
+TypeScript;104
+Typography;1
+UI Design;3
+UI-UX;40
+UI/UX;2
+UML;3
+UX Design;2
+UX/UI Design;7
+Ui5;1
+Unit test;8
+Unity;19
+Unix;3
+Unreal Engine;1
+Usability testing;3
+User diagram;1
+User story;2
+VHDL;1
+VMware;5
+Verilog;1
+Visual Design;2
+Vmware;4
+VueJS;36
+Vuex;1
+Vulnerability Assessment;1
+Vulnerability Management;2
+WCF;1
+WPF;5
+Waterfall Methodology;8
+Web;2
+Web API;5
+Web Application;1
+Web Application Firewall;1
+Web Design;1
+Web Tester;1
+Web3.js;5
+Websocket;1
+White box testing;3
+WinForms;3
+Windows;5
+Windows Server;5
+Winform;1
+Wireframing;3
+Wireshark;1
+WooCommerce;2
+WordPress;1
+Wordpress;8
+XML;2
+Zeplin;1
+audit;1
+iOS;33
+macOS;2
+pytest;1
+scikit-learn;1
+xCode;1

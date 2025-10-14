@@ -1,0 +1,7 @@
+Fresher	22
+Intern	6
+Junior	125
+Middle	178
+Senior	173
+Trưởng nhóm	24
+Trưởng phòng	10
