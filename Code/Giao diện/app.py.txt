@@ -1,0 +1,280 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+import os
+import subprocess
+import datetime
+
+# ==============================
+# 🛠️ Cấu hình và Hàm chung
+# ==============================
+st.set_page_config(page_title="IT Job Data Visualization", layout="wide")
+st.title("📊 HỆ THỐNG TRỰC QUAN HÓA DỮ LIỆU TUYỂN DỤNG IT VIỆT NAM")
+st.markdown("Phiên bản tổng quan tập trung vào các phân tích cốt lõi về thị trường.")
+
+DATA_PATH = "Data/"
+BACKUP_PATH = os.path.join(DATA_PATH, "backup")
+os.makedirs(BACKUP_PATH, exist_ok=True)
+
+# ==============================
+# 🛠 Hàm tiện ích
+# ==============================
+@st.cache_data
+def load_all_data():
+    files = {
+        "salary_stat": "salary_stat.csv",
+        "level_count": "level_count.csv",
+        "domain_count": "domain_count.csv",
+        "skill_count": "skill_count.csv",
+        "salary_location": "salary_location.csv",
+        "company_job_count": "company_job_count.csv",
+    }
+    dataframes = {}
+    for key, filename in files.items():
+        filepath = os.path.join(DATA_PATH, filename)
+        try:
+            df = pd.read_csv(filepath, sep=";", header=None)
+        except UnicodeDecodeError:
+            df = pd.read_csv(filepath, sep=";", encoding="cp1252", header=None)
+        except FileNotFoundError:
+            st.error(f"Lỗi: Không tìm thấy file {filename} trong thư mục '{DATA_PATH}'.")
+            df = pd.DataFrame()
+        dataframes[key] = df
+    return dataframes
+
+def clean_salary_column(series):
+    series = series.astype(str).str.replace(" triệu VND", "", regex=False)
+    series = series.str.replace("thương lượng", "", regex=False)
+    series = series.str.replace(",", ".", regex=False)
+    series = series.str.replace(r'[^\d\.\-]', '', regex=True)
+    return pd.to_numeric(series, errors="coerce")
+
+def convert_df_to_csv(df):
+    return df.to_csv(index=False).encode('utf-8')
+
+def backup_file(file_name):
+    df = pd.read_csv(os.path.join(DATA_PATH, file_name))
+    if df.empty:
+        return None, None
+    backup_dir = os.path.join(BACKUP_PATH, file_name.replace(".csv",""))
+    os.makedirs(backup_dir, exist_ok=True)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_file_name = f"{file_name.replace('.csv','')}_{timestamp}.csv"
+    backup_path = os.path.join(backup_dir, backup_file_name)
+    df.to_csv(backup_path, index=False)
+    return backup_file_name, backup_path
+
+def restore_file(file_name, backup_file_name):
+    backup_dir = os.path.join(BACKUP_PATH, file_name.replace(".csv",""))
+    backup_path = os.path.join(backup_dir, backup_file_name)
+    if not os.path.exists(backup_path):
+        return False
+    df = pd.read_csv(backup_path)
+    df.to_csv(os.path.join(DATA_PATH, file_name), index=False)
+    return True
+
+# ==============================
+# 🔹 Sidebar chọn chức năng
+# ==============================
+st.sidebar.header("Chọn Chức Năng")
+analysis_selection = st.sidebar.radio(
+    "Chọn một nhóm để xem chi tiết:",
+    (
+        "💰 Phân Tích Lương", 
+        "📈 Phân Tích Nhu Cầu Tuyển Dụng", 
+        "🏢 Thông Tin Thị Trường", 
+        "⚙️ Quản Lý Data & final_cleaned", 
+        "🔄 Quản Lý File HDFS",
+        "💾 Backup & Restore"
+    )
+)
+
+# ==============================
+# 💰 Phân Tích Lương
+# ==============================
+if analysis_selection == "💰 Phân Tích Lương":
+    st.header("💰 Phân Tích Lương")
+    df_salary = load_all_data()["salary_stat"].copy()
+    if not df_salary.empty and len(df_salary.columns) >= 4:
+        df_salary.columns = ["Job", "Count", "Variance", "Std"]
+        for col in ["Count","Variance","Std"]:
+            df_salary[col] = pd.to_numeric(df_salary[col].astype(str).str.replace(",", "", regex=False), errors="coerce").fillna(0)
+        df_salary_nonzero = df_salary[df_salary["Std"]>0].sort_values("Std", ascending=False)
+        top_n = st.slider("Top N công việc theo biến động lương", 5, min(30,len(df_salary_nonzero)), 15)
+        df_top = df_salary_nonzero.head(top_n)
+        fig = px.bar(df_top, x="Job", y="Std", color="Std",
+                     text=df_top["Std"].apply(lambda x:f"{x:,.0f}"), title=f"Top {top_n} công việc theo độ lệch chuẩn lương")
+        fig.update_layout(xaxis_tickangle=-45, coloraxis_showscale=False, uniformtext_minsize=8, uniformtext_mode='hide')
+        fig.update_traces(textposition='outside')
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.error("Dữ liệu salary_stat.csv không hợp lệ")
+
+    df_loc = load_all_data()["salary_location"].copy()
+    if not df_loc.empty and len(df_loc.columns)>=3:
+        df_loc.columns=["KhuVuc","SoLuongTin","LuongTB"]
+        df_loc["LuongTB"]=clean_salary_column(df_loc["LuongTB"])
+        df_loc.dropna(subset=["LuongTB"], inplace=True)
+        df_loc = df_loc[df_loc["LuongTB"]>0].sort_values("LuongTB", ascending=False)
+        fig_loc = px.bar(df_loc, x="KhuVuc", y="LuongTB", color="LuongTB",
+                         title="Mức lương trung bình theo khu vực (triệu VND)")
+        fig_loc.update_traces(texttemplate='%{y:.1f} tr', textposition='outside')
+        st.plotly_chart(fig_loc, use_container_width=True)
+
+# ==============================
+# 📈 Phân Tích Nhu Cầu Tuyển Dụng
+# ==============================
+elif analysis_selection == "📈 Phân Tích Nhu Cầu Tuyển Dụng":
+    st.header("📈 Phân Tích Nhu Cầu Tuyển Dụng")
+    df_level = load_all_data()["level_count"].copy()
+    if not df_level.empty and len(df_level.columns)>=2:
+        df_level.columns=["CapDo","SoLuong"]
+        df_level["SoLuong"]=pd.to_numeric(df_level["SoLuong"], errors="coerce").fillna(0)
+        df_level = df_level[df_level["SoLuong"]>0]
+        fig = px.pie(df_level, names="CapDo", values="SoLuong", hole=0.4, title="Tỷ lệ nhu cầu theo cấp độ")
+        fig.update_traces(textinfo='percent+label')
+        st.plotly_chart(fig, use_container_width=True)
+
+    df_domain = load_all_data()["domain_count"].copy()
+    if not df_domain.empty and len(df_domain.columns)>=2:
+        df_domain.columns=["LinhVuc","SoLuong"]
+        df_domain["SoLuong"]=pd.to_numeric(df_domain["SoLuong"], errors="coerce").fillna(0)
+        top_n = st.slider("Top N lĩnh vực",5,15,8,key="domain_slider")
+        df_top = df_domain.sort_values("SoLuong", ascending=False).head(top_n)
+        fig = px.bar(df_top, x="SoLuong", y="LinhVuc", orientation='h', color="SoLuong",
+                     title=f"Top {top_n} lĩnh vực có nhu cầu tuyển dụng nhiều nhất")
+        st.plotly_chart(fig, use_container_width=True)
+
+    df_skill = load_all_data()["skill_count"].copy()
+    if not df_skill.empty and len(df_skill.columns)>=2:
+        df_skill.columns=["KyNang","SoLuong"]
+        df_skill["SoLuong"]=pd.to_numeric(df_skill["SoLuong"], errors="coerce").fillna(0)
+        top_skills = df_skill.sort_values("SoLuong", ascending=False).head(100)
+        wc_dict = top_skills.set_index("KyNang")["SoLuong"].to_dict()
+        wc = WordCloud(width=800,height=400, background_color="white", max_words=100,colormap='viridis').generate_from_frequencies(wc_dict)
+        fig,ax = plt.subplots(figsize=(12,6))
+        ax.imshow(wc, interpolation="bilinear")
+        ax.axis("off")
+        st.pyplot(fig)
+
+# ==============================
+# 🏢 Thông Tin Thị Trường
+# ==============================
+elif analysis_selection == "🏢 Thông Tin Thị Trường":
+    st.header("🏢 Thông Tin Thị Trường")
+    df_company = load_all_data()["company_job_count"].copy()
+    if not df_company.empty and len(df_company.columns)>=2:
+        df_company.columns=["CongTy","SoLuongTin"]
+        df_company["SoLuongTin"]=pd.to_numeric(df_company["SoLuongTin"], errors="coerce").fillna(0)
+        top_n = st.slider("Top N công ty",5,30,15,key="company_slider")
+        df_top = df_company.sort_values("SoLuongTin", ascending=False).head(top_n)
+        fig = px.bar(df_top, x="SoLuongTin", y="CongTy", orientation='h', color="SoLuongTin",
+                     title=f"Top {top_n} công ty có nhiều tin tuyển dụng nhất")
+        st.plotly_chart(fig, use_container_width=True)
+
+# ==============================
+# ⚙️ Quản Lý Data & final_cleaned
+# ==============================
+elif analysis_selection == "⚙️ Quản Lý Data & final_cleaned":
+    st.header("⚙️ Quản Lý & Chỉnh Sửa File 'final_cleaned.csv'")
+    FINAL_FILE = os.path.join(DATA_PATH,"final_cleaned.csv")
+    HDFS_PATH = "hdfs://localhost:9000/input/final_cleaned.csv"
+    try:
+        df_final = pd.read_csv(FINAL_FILE)
+    except:
+        df_final=pd.DataFrame()
+    if not df_final.empty:
+        search_term = st.text_input("Tìm kiếm trong bảng:").strip()
+        df_display = df_final.copy()
+        if search_term:
+            mask = df_display.apply(lambda row: row.astype(str).str.contains(search_term, case=False).any(), axis=1)
+            df_display=df_display[mask]
+        st.markdown("### ✏️ Chỉnh sửa dữ liệu trực tiếp")
+        edited_df = st.data_editor(df_display,num_rows="dynamic", use_container_width=True)
+        if st.button("💾 Lưu thay đổi vào file local"):
+            if search_term:
+                for idx in edited_df.index:
+                    df_final.loc[idx]=edited_df.loc[idx]
+            else:
+                df_final=edited_df.copy()
+            df_final.to_csv(FINAL_FILE,index=False)
+            st.success(f"✅ Đã lưu file final_cleaned.csv tại {FINAL_FILE}")
+        st.markdown("### ⬆️ Cập nhật file lên HDFS")
+        if st.button("🚀 Cập nhật lên HDFS"):
+            try:
+                df_final.to_csv(FINAL_FILE,index=False)
+                cmd=f"hdfs dfs -put -f {FINAL_FILE} {HDFS_PATH}"
+                subprocess.run(cmd, shell=True, check=True)
+                st.success(f"✅ Đã cập nhật file lên HDFS: {HDFS_PATH}")
+            except subprocess.CalledProcessError as e:
+                st.error(f"❌ Lỗi khi cập nhật lên HDFS: {e}")
+
+# ==============================
+# 🔄 Quản Lý File HDFS
+# ==============================
+elif analysis_selection == "🔄 Quản Lý File HDFS":
+    st.header("🔄 Quản Lý File HDFS")
+    LOCAL_DATA_PATH = DATA_PATH
+    st.subheader("1️⃣ Import từ HDFS về local")
+    hdfs_file_to_import = st.text_input("Đường dẫn file HDFS:", value="/input/final_cleaned.csv", key="import_hdfs")
+    if st.button("⬇️ Tải về local"):
+        local_target = os.path.join(LOCAL_DATA_PATH, os.path.basename(hdfs_file_to_import))
+        try:
+            cmd = f"hdfs dfs -get -f {hdfs_file_to_import} {local_target}"
+            subprocess.run(cmd, shell=True, check=True)
+            st.success(f"✅ File đã được tải về: {local_target}")
+        except subprocess.CalledProcessError as e:
+            st.error(f"❌ Lỗi khi tải file từ HDFS: {e}")
+
+    st.markdown("---")
+    st.subheader("2️⃣ Export từ local lên HDFS")
+    local_files = [f for f in os.listdir(LOCAL_DATA_PATH) if os.path.isfile(os.path.join(LOCAL_DATA_PATH,f))]
+    file_to_export = st.selectbox("Chọn file local để upload:", local_files, key="export_local")
+    hdfs_target_path = st.text_input("Đường dẫn đích trên HDFS:", value="/input/", key="export_hdfs")
+    if st.button("⬆️ Upload lên HDFS"):
+        local_path = os.path.join(LOCAL_DATA_PATH, file_to_export)
+        hdfs_full_path = os.path.join(hdfs_target_path, file_to_export)
+        try:
+            cmd = f"hdfs dfs -put -f {local_path} {hdfs_full_path}"
+            subprocess.run(cmd, shell=True, check=True)
+            st.success(f"✅ File đã được upload lên HDFS: {hdfs_full_path}")
+        except subprocess.CalledProcessError as e:
+            st.error(f"❌ Lỗi khi upload file lên HDFS: {e}")
+
+# ==============================
+# 💾 Backup & Restore
+# ==============================
+elif analysis_selection == "💾 Backup & Restore":
+    st.header("💾 Backup & Restore File CSV")
+
+    csv_files = [f for f in os.listdir(DATA_PATH) if f.endswith(".csv")]
+    file_selected = st.selectbox("Chọn file muốn backup/restore:", csv_files, key="backup_file_select")
+
+    st.subheader("1️⃣ Backup file local")
+    if st.button("💾 Tạo backup"):
+        backup_name, backup_path = backup_file(file_selected)
+        if backup_name:
+            st.success(f"✅ Đã tạo backup: {backup_name} tại {backup_path}")
+        else:
+            st.warning("❌ File rỗng, không thể backup.")
+
+    st.subheader("2️⃣ Restore từ local backup")
+    backup_dir = os.path.join(BACKUP_PATH, file_selected.replace(".csv",""))
+    backups = []
+    if os.path.exists(backup_dir):
+        backups = [f for f in os.listdir(backup_dir) if f.endswith(".csv")]
+    restore_backup = st.selectbox("Chọn backup để restore:", backups, key="restore_backup")
+    if st.button("♻️ Restore file"):
+        if restore_file(file_selected, restore_backup):
+            st.success(f"✅ Đã restore {file_selected} từ backup {restore_backup}")
+        else:
+            st.error("❌ Lỗi restore file")
+
+
+# ==============================
+# Footer
+# ==============================
+st.markdown("---")
+st.caption("© 2025 - IT Job Data Visualization | Nguồn dữ liệu: itviec.com & topdev.vn")
