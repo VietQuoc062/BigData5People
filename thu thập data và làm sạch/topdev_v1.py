@@ -1,5 +1,3 @@
-# https://topdev.vn/
-
 import csv
 import time
 import random
@@ -39,7 +37,6 @@ time.sleep(random.uniform(2, 4))
 # --- PHẦN ĐĂNG NHẬP sẽ dừng 80s để bạn đăng nhập thủ công ---
 time.sleep(80)
 
-# mở lại url https://topdev.vn/jobs/search?job_categories_ids=2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C67
 driver.get("https://topdev.vn/jobs/search?job_categories_ids=2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C67")
 time.sleep(random.uniform(2, 4))
 
@@ -77,7 +74,7 @@ def safe_click_next(driver, timeout=10, max_retries=5):
             try:
                 next_btn.click()
             except (ElementClickInterceptedException, StaleElementReferenceException):
-                # Retry by refreshing reference via JS
+                # Retry by refreshing
                 driver.execute_script("arguments[0].click();", next_btn)
             return True
         except TimeoutException:
