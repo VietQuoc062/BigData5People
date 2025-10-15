@@ -19,22 +19,6 @@ USER_AGENT = (
     "AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/140.0.0.0 Safari/537.36"
 )
-HEADERS = {
-    "User-Agent": USER_AGENT,
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "en-US,en;q=0.9,vi;q=0.8",
-    "Connection": "keep-alive",
-    "Referer": "https://google.com/",
-    "Upgrade-Insecure-Requests": "1",
-    "DNT": "1",
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "none",
-    "Sec-Fetch-User": "?1",
-    "Pragma": "no-cache",
-    "Cache-Control": "no-cache"
-}
 
 username = "your_email@gmail.com"
 password = "your_password"
@@ -136,30 +120,25 @@ def extract_job_links(driver):
     return links
 
 
+def create_driver():
+    """Tạo Chrome driver với các options cố định"""
+    options = Options()
+    options.add_argument(f"user-agent={USER_AGENT}")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--disable-infobars")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--lang=en-US,en")
+    options.add_argument("--window-size=1920,1080")
+    # options.add_argument("--headless=new")  # optional
+    return webdriver.Chrome(options=options)
+
 def restart_driver():
     print("[Driver] Recreating driver after window loss...")
-    new_options = Options()
-    new_options.add_argument(f"user-agent={USER_AGENT}")
-    new_options.add_argument("--disable-blink-features=AutomationControlled")
-    new_options.add_argument("--disable-infobars")
-    new_options.add_argument("--no-sandbox")
-    new_options.add_argument("--disable-dev-shm-usage")
-    new_options.add_argument("--lang=en-US,en")
-    new_options.add_argument("--window-size=1920,1080")
-    return webdriver.Chrome(options=new_options)
+    return create_driver()
 
 # ================== INIT DRIVER ==================
-chrome_options = Options()
-chrome_options.add_argument(f"user-agent={USER_AGENT}")
-chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-chrome_options.add_argument("--disable-infobars")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--lang=en-US,en")
-chrome_options.add_argument("--window-size=1920,1080")
-# chrome_options.add_argument("--headless=new")  # optional
-
-driver = webdriver.Chrome(options=chrome_options)
+driver = create_driver()
 
 try:
     # ================== LOGIN ==================
